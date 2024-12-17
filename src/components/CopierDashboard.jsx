@@ -155,6 +155,10 @@ const CopierDashboard = () => {
 
             {isLoading ? (
                 <div className="text-center py-8">Loading traders...</div>
+            ) : localTraders.length === 0 ? (
+                <div className="text-center py-8">
+                    <Text size="lg">Start by adding traders for copying</Text>
+                </div>
             ) : (
                 <div className="grid gap-6">
                     {localTraders.map((trader, index) => (
