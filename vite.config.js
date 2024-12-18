@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 8443,
     },
-    base: '/copy-trading/',
+    base: '/',
     define: {
       'import.meta.env.VITE_APP_ID': JSON.stringify(env.VITE_APP_ID || PROD_CONFIG.APP_ID),
       'import.meta.env.VITE_WS_URL': JSON.stringify(env.VITE_WS_URL || PROD_CONFIG.WS_URL),
