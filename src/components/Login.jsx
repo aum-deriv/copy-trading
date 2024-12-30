@@ -2,6 +2,7 @@ import { Spinner } from "@deriv-com/quill-ui";
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.jsx";
+import { getOAuthURL } from "../config/oauth_config.js";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -79,13 +80,40 @@ const Login = () => {
             window.location.hash.includes("acct")) &&
         !defaultAccount?.token;
 
-    if (!showSpinner) {
-        return null;
-    }
-
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <Spinner size="lg" />
+        <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-100">
+            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <div className="flex flex-col items-center mb-8">
+                    <img
+                        src="/src/assets/deriv-icon.svg"
+                        alt="Deriv Logo"
+                        className="w-16 h-16 mb-4"
+                    />
+                    <h1 className="text-2xl font-bold text-neutral-900">
+                        Copy Trading
+                    </h1>
+                </div>
+
+                {showSpinner ? (
+                    <div className="flex flex-col items-center">
+                        <Spinner size="lg" className="mb-4" />
+                        <p className="text-neutral-600">Authenticating...</p>
+                    </div>
+                ) : (
+                    <div className="text-center">
+                        <p className="text-neutral-600 mb-4">
+                            Please log in to your Deriv account to start copy
+                            trading
+                        </p>
+                        <a
+                            href={getOAuthURL()}
+                            className="inline-block bg-brand-red hover:bg-red-700 text-white font-medium py-2 px-6 rounded-md transition-colors"
+                        >
+                            Log in
+                        </a>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
