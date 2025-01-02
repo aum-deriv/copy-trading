@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SegmentedControlSingleChoice, Skeleton } from "@deriv-com/quill-ui";
 import { useAuth } from "../hooks/useAuth.jsx";
+import useSettings from "../hooks/useSettings";
 import TraderDashboard from "./TraderDashboard";
 import CopierDashboard from "./CopierDashboard";
 
 const Dashboard = () => {
     const [userType, setUserType] = useState("copier");
     const { isLoading } = useAuth();
+    const { settings, isLoading: isSettingsLoading } = useSettings();
+
+    useEffect(() => {
+        if (settings?.is_copier !== undefined) {
+            setUserType(settings.is_copier ? "copier" : "trader");
+        }
+    }, [settings?.is_copier]);
 
     return (
         <div className="min-h-screen">
@@ -31,7 +39,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Dashboard Content */}
-                {isLoading ? (
+                {isLoading || isSettingsLoading ? (
                     <div className="space-y-4">
                         <div className="bg-white p-6 rounded-lg shadow">
                             <Skeleton.Square
