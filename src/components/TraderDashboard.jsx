@@ -1,11 +1,11 @@
+import { useState } from "react";
+import { Spinner, SectionMessage } from "@deriv-com/quill-ui";
 import useSettings from "../hooks/useSettings";
 import useCopyTradersList from "../hooks/useCopyTradersList";
 import TraderStatistics from "./TraderStatistics";
 import TraderBanner from "./TraderBanner";
 import TokenManagement from "./TokenManagement";
 import Settings from "./Settings";
-import { Spinner, SectionMessage } from "@deriv-com/quill-ui";
-import { useState } from "react";
 import TraderDesktopNavigation from "./TraderDesktopNavigation";
 import TraderMobileNavigation from "./TraderMobileNavigation";
 
@@ -51,7 +51,11 @@ const TraderDashboard = () => {
                         ) : selectedMenu === "tokens" ? (
                             <TokenManagement />
                         ) : (
-                            <Settings />
+                            <Settings
+                                settings={settings}
+                                updateSettings={updateSettings}
+                                onChangeSettings={fetchSettings}
+                            />
                         )}
                     </div>
 
