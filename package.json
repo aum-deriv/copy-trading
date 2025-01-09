@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@deriv-com/quill-ui": "^1.24.2",
+    "@deriv-com/quill-ui": "^1.24.4",
     "@deriv/quill-icons": "^2.2.2",
     "chart.js": "^4.4.7",
     "react": "^18.3.1",

@@ -1,5 +1,10 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider, SnackbarProvider, Spinner } from "@deriv-com/quill-ui";
+import {
+    ThemeProvider,
+    SnackbarProvider,
+    SnackbarController,
+    Spinner,
+} from "@deriv-com/quill-ui";
 import { AuthProvider, useAuth } from "./hooks/useAuth.jsx";
 import Login from "./components/Login";
 import Header from "./components/Header";
@@ -9,13 +14,14 @@ import PWAInstallBanner from "./components/PWAInstallBanner";
 
 function App() {
     return (
-        <ThemeProvider theme="light" persistent>
-            <SnackbarProvider>
-                <AuthProvider>
+        <AuthProvider>
+            <ThemeProvider theme="light" persistent>
+                <SnackbarProvider>
+                    <SnackbarController />
                     <AppContent />
-                </AuthProvider>
-            </SnackbarProvider>
-        </ThemeProvider>
+                </SnackbarProvider>
+            </ThemeProvider>
+        </AuthProvider>
     );
 }
 

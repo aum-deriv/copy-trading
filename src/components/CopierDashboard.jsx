@@ -1,5 +1,10 @@
-import { useEffect, useState } from "react";
-import { Text, Snackbar, Spinner, SectionMessage } from "@deriv-com/quill-ui";
+import { useEffect } from "react";
+import {
+    Text,
+    Spinner,
+    SectionMessage,
+    useSnackbar,
+} from "@deriv-com/quill-ui";
 import useCopyTradersList from "../hooks/useCopyTradersList";
 import CopyTradingBanner from "./CopyTradingBanner";
 import useSettings from "../hooks/useSettings";
@@ -28,6 +33,7 @@ const CopierDashboard = () => {
         refreshList,
     } = useCopyTradersList();
     const hasCopiers = copiers?.length > 0;
+    const { addSnackbar, removeSnackbar } = useSnackbar();
 
     useEffect(() => {
         console.log("CopierDashboard - Traders:", {
@@ -37,32 +43,27 @@ const CopierDashboard = () => {
         });
     }, [apiTraders, isLoading, error]);
     const isProcessing = copyStartProcessingTrader || copyStopProcessingTrader;
-    const [snackbar, setSnackbar] = useState({
-        isVisible: false,
-        message: "",
-        status: "neutral",
-    });
-
-    const handleSnackbarClose = () => {
-        setSnackbar((prev) => ({ ...prev, isVisible: false }));
-    };
 
     const handleStartCopy = (trader) => {
         startCopyTrading(
             trader,
             (trader) => {
-                setSnackbar({
-                    isVisible: true,
+                const id = `start-copy-${trader.id}-${Date.now()}`;
+                addSnackbar({
+                    id,
                     message: `Successfully started copying ${trader.id}`,
                     status: "neutral",
                 });
+                setTimeout(() => removeSnackbar(id), 3000);
             },
             (errorMessage) => {
-                setSnackbar({
-                    isVisible: true,
+                const id = `start-copy-error-${Date.now()}`;
+                addSnackbar({
+                    id,
                     message: errorMessage,
                     status: "fail",
                 });
+                setTimeout(() => removeSnackbar(id), 3000);
             }
         );
     };
@@ -71,19 +72,23 @@ const CopierDashboard = () => {
         stopCopyTrading(
             trader,
             (trader) => {
-                setSnackbar({
-                    isVisible: true,
+                const id = `stop-copy-${trader.name}-${Date.now()}`;
+                addSnackbar({
+                    id,
                     message: `Stopped copying ${trader.name}`,
                     status: "neutral",
                 });
+                setTimeout(() => removeSnackbar(id), 3000);
                 refreshList();
             },
             (errorMessage) => {
-                setSnackbar({
-                    isVisible: true,
+                const id = `stop-copy-error-${Date.now()}`;
+                addSnackbar({
+                    id,
                     message: errorMessage,
                     status: "fail",
                 });
+                setTimeout(() => removeSnackbar(id), 3000);
             }
         );
     };
@@ -99,11 +104,13 @@ const CopierDashboard = () => {
             await updateSettings({ allow_copiers: 0 });
             await fetchSettings();
         } catch (error) {
-            setSnackbar({
-                isVisible: true,
+            const id = `settings-error-${Date.now()}`;
+            addSnackbar({
+                id,
                 message: error.message || "Failed to update settings",
                 status: "fail",
             });
+            setTimeout(() => removeSnackbar(id), 3000);
         }
     };
 
@@ -160,17 +167,6 @@ const CopierDashboard = () => {
                         ))}
                     </div>
                 )}
-            </div>
-
-            <div className="fixed top-0 left-0 right-0 flex justify-center pt-4 z-50">
-                <Snackbar
-                    isVisible={snackbar.isVisible}
-                    message={snackbar.message}
-                    status={snackbar.status}
-                    hasCloseButton={true}
-                    onCloseAction={handleSnackbarClose}
-                    standalone={true}
-                />
             </div>
         </div>
     );
