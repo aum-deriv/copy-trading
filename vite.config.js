@@ -137,7 +137,18 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       port: 8443,
-      historyApiFallback: true
+      historyApiFallback: {
+        rewrites: [
+          {
+            from: /^\/.well-known\/.*$/,
+            to: context => context.parsedUrl.pathname
+          }
+        ]
+      },
+      fs: {
+        strict: false,
+        allow: ['.well-known']
+      }
     },
     build: {
       // Enable asset hashing for better cache control
@@ -145,6 +156,8 @@ export default defineConfig(({ mode }) => {
       // Copy assetlinks.json to output directory
       copyPublicDir: true,
       outDir: 'dist',
+      // Ensure .well-known files are copied as-is
+      assetsInclude: ['.well-known/**'],
       rollupOptions: {
         output: {
           // Ensure chunk filenames include content hash
